@@ -1,77 +1,71 @@
-# Custom Database Template for the MiSTer Downloader
+# MiSTer BGM Library
 
-By following these instructions, you'll create your own [Custom Database for the MiSTer Downloader](https://github.com/MiSTer-devel/Downloader_MiSTer/blob/main/docs/custom-databases.md). This database can be integrated in MiSTer FPGA by just adding your own drop-in database file at the root of the SD.
+A shared music library for MiSTer FPGA, installed and updated through MiSTer Downloader or Update All. This database installs music files. Install the BGM player separately to hear them in the MiSTer menu.
 
-Once your database is up, adding files to it is very simple. You'll only have to upload files to your repository on GitHub, and after that, your users will fetch these files directly in their devices, by just running *update* or *update_all*.
+## Install the music library
 
-## How to generate your own Custom Database for the MiSTer Downloader:
-1. Make sure you are logged in into your GitHub account. Or register a new account if you don't have any yet.
-2. Then click on
-    <a style="margin-top:100px;" href="https://github.com/theypsilon/DB-Template_MiSTer/generate">
-        <img src="https://img.shields.io/badge/Use_this_template-2ea44f" 
-            alt="Use this template"
-            title="Create repository from this template"></a>
-button to create your own public Custom Database repository on GitHub.
-3. After less than 5 minutes, you're database file will be generated at `https://raw.githubusercontent.com/<YOUR GITHUB USER>/<YOUR GITHUB REPOSITORY>/db/db.json.zip` (replacing the <> fields accordingly) and will be ready to be used. For example, if your GitHub user is `jose` and your repository name is `game_wallpapers`, the url will be: `https://raw.githubusercontent.com/jose/game_wallpapers/db/db.json.zip`
-4. To integrate it in a MiSTer device, download the following file: `https://raw.githubusercontent.com/<YOUR GITHUB USER>/<YOUR GITHUB REPOSITORY>/db/downloader_<YOUR GITHUB USER>_<YOUR GITHUB REPOSITORY>.zip`.
-Then extract the `.ini` file from it and place it in the root of the SD card.
-5. After that, run *update* or *update_all* as usual. It will try to fetch the files from your newly created database. If your database is still empty -which is your case if you followed these instructions-, obviously it won't download any file yet, but it will show up in the logs. For adding files to the database check the next section.
+1. Download [the library's Downloader ZIP](https://raw.githubusercontent.com/fenderf4i/MiSTer-BGM-Library/db/downloader_fenderf4i_MiSTer-BGM-Library.zip).
+2. Extract `downloader_fenderf4i_MiSTer-BGM-Library.ini` and copy it to the root of your MiSTer SD card, next to `downloader.ini` (normally `/media/fat/`).
+3. Run Downloader, `update`, or Update All from the MiSTer Scripts menu.
 
-## How to add files to your already working Custom Database:
-
-Once you have your database up and running (check previous section to figure out how to set it up), adding files is very straightforward.
-
-Just upload any file to your repository by using GitHub UI (Add File > Upload files), or via git. Once the files show up in your repository, they'll also be added to your database automatically. Alternatively, to include files without uploading them to the repository, add their external locations and corresponding paths to [external_files.csv](external_files.csv).
-
-After adding the files, you may see the *Actions* tab in your repository to see how the automation did its magic if you are curious.
-
-A couple of things to consider when uploading files:
-
-- When a user fetches the files via *update* or *update_all*, the downloaded file structure will mirror 1:1 the file structure you have in your repository at GitHub. This means, if you have a folder `_Cores/` containing some files in your repository, an identical `_Cores` folder will show up in MiSTer containing the exact same files.
-
-- The files `README.md`, `LICENSE`, and the `.github` folder won't be included in your database. Just ignore them, they won't be installed in the devices. The file `external_files.csv` won't show up on your device either, but the files listed inside it will.
-
-- You may upload as many files as you want as long as they don't violate GitHub constraints (100mb is max size per file).
-
-- You should avoid full path clashes between your files and the files from other databases so that your users don't run into issues when using multiple databases at the same time.
-
-## How your users will integrate your Custom Database in their MiSTers:
-
-Your users can integrate your database in two ways.
-
-### Drop-in database
-
-The easiest option is for users to drag and drop a file onto their SD card.
-
-For example, if your GitHub username is `jose` and your repository is `game_wallpapers`, users can download:
-
-`https://raw.githubusercontent.com/jose/game_wallpapers/db/downloader_jose_game_wallpapers.zip`
-
-Then they only need to:
-
-1. Extract `downloader_jose_game_wallpapers.ini` from the ZIP.
-2. Copy it to the **root of the MiSTer SD card**, next to `downloader.ini`.
-
-That's it. The database is ready to use.
-
-
-### Manual INI editing (for Advanced Users)
-
-If they prefer to do it manually instead, they may add the following lines to the bottom of `downloader.ini`:
+Alternatively, add this section to your existing `downloader.ini`:
 
 ```ini
-[jose/game_wallpapers]
-db_url = https://raw.githubusercontent.com/jose/game_wallpapers/db/db.json.zip
+[fenderf4i/MiSTer-BGM-Library]
+db_url = https://raw.githubusercontent.com/fenderf4i/MiSTer-BGM-Library/db/db.json.zip
 ```
 
-This needs to be done just once by your users. After that, whenever they run *downloader* or *update_all* they'll also be installing your updated files.
+Use either the drop-in file or the manual section; you only need to register the library once. Future runs download library updates.
 
-## Modifying README.md
+## Install and use the BGM player
 
-After you have your own repository based on this template, a good idea would be to edit your `README.md` describing the content of your database and how to use it. That way users will learn about your Database and will integrate it into their MiSTer's easily.
+BGM is maintained in [MiSTer Extensions (mrext)](https://github.com/wizzomafizzo/mrext). See its [current BGM instructions](https://github.com/wizzomafizzo/mrext/blob/main/docs/bgm.md).
 
-Feel free to remove any reference to the original template there.
+- With Update All: open its settings by pressing Up during the startup countdown, enable **MiSTer Extensions (wizzo)** under **Other Tools & Scripts**, save, and run the update.
+- With Downloader: add the following section to `downloader.ini` and run Downloader. This installs the combined MiSTer Extensions collection:
 
-## DB Inspector
+```ini
+[mrext/all]
+db_url = https://raw.githubusercontent.com/wizzomafizzo/mrext/main/releases/all.json
+```
 
-You may use this tool to inspect the resulting database easily: https://theypsilon.github.io/DB-Inspector_MiSTer
+After both the player and music have been installed:
+
+1. Run `bgm` from the MiSTer Scripts menu to perform its initial setup.
+2. Select the **MiSTer-BGM-Library** playlist in its control screen. If the first run only performs setup, run `bgm` again.
+3. Enable random playback or single-track looping as desired.
+
+BGM can play music in the menu, stop when a core launches, and resume when you return to the menu. Its first run sets up automatic startup. This library does not replace your `bgm.ini`, other playlists, or startup configuration.
+
+## Included test track
+
+| Track | Creator | License | Installed path |
+| --- | --- | --- | --- |
+| Happy Adventure (Loop) | TinyWorlds | CC0 1.0 | `music/MiSTer-BGM-Library/Happy Adventure.mp3` |
+
+[Original track and creator's license declaration](https://opengameart.org/content/happy-adventure-loop) · [CC0 public-domain dedication](https://creativecommons.org/publicdomain/zero/1.0/)
+
+The test track may be copied and redistributed under CC0 without required attribution. Creator credit is retained here for provenance. The original MP3 is preserved without conversion. It is suitable for testing installation and playback; a small gap may be audible when looping.
+
+## Add music to the library
+
+1. Add supported audio files under `music/MiSTer-BGM-Library/` on the `main` branch. BGM supports `.mp3`, `.ogg`, `.wav`, `.mid`, `.vgm`, `.vgz`, and `.vgm.gz`.
+2. For a separate selectable playlist, create a uniquely named folder directly under `music/`.
+3. Record each track's creator, source URL, and redistribution license in this README. Only add tracks you have permission to distribute publicly.
+4. Commit or merge the change into `main`. The **Build Custom Database** GitHub Action generates and tests the database, then publishes it on the `db` branch.
+5. Wait for the Action to finish successfully before asking users to run Downloader again.
+
+GitHub's **Add file > Upload files** can be used by repository maintainers. Other contributors can submit a pull request. Avoid replacing another collection's paths. A leading underscore in a BGM filename marks a boot sound, so ordinary music filenames should not start with `_`.
+
+For externally hosted tracks, list their destination paths, direct URLs, byte sizes, and MD5 hashes in `external_files.csv`. Use stable direct-download URLs. Files committed to this repository are downloaded directly from GitHub.
+
+## Troubleshooting
+
+- **Database download fails:** check the repository's Actions tab and make sure the latest build succeeded; verify the URL above is copied exactly.
+- **Tracks downloaded but no music plays:** install and run BGM, select the library playlist, enable playback, and check volume. Downloader installs files; it does not start the player.
+- **Playlist missing:** check that tracks are present in `/media/fat/music/MiSTer-BGM-Library/`, then restart BGM.
+- **Update verification:** run Downloader a second time after a successful installation; unchanged tracks should not need downloading again.
+
+Database: [db.json.zip](https://raw.githubusercontent.com/fenderf4i/MiSTer-BGM-Library/db/db.json.zip) · [Build status](https://github.com/fenderf4i/MiSTer-BGM-Library/actions)
+
+Built using [theypsilon's Custom Database Template](https://github.com/theypsilon/DB-Template_MiSTer). The template's software license is retained in `LICENSE`; music uses the license listed for each track above.
